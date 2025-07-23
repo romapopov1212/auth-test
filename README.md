@@ -6,3 +6,4 @@
 
 в конфиге пример секретного ключа
 
+swagger: localhost:8080/swagger/index.html
