@@ -1,0 +1,143 @@
+basePath: /api/v1
+definitions:
+  internal_handler.ErrorResponse:
+    properties:
+      error:
+        example: error message
+        type: string
+    type: object
+  internal_handler.MessageResponse:
+    properties:
+      message:
+        example: success message
+        type: string
+    type: object
+  internal_handler.RefreshRequest:
+    properties:
+      access_token:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        type: string
+      refresh_token:
+        example: f7a9e8bb-dc1e-4fdb-9a92-9a8b5d8e7f6c
+        type: string
+    type: object
+  internal_handler.TokenResponse:
+    properties:
+      access_token:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        type: string
+      refresh_token:
+        example: f7a9e8bb-dc1e-4fdb-9a92-9a8b5d8e7f6c
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API для аутентификации и управления токенами
+  title: Auth Test API
+  version: "1.0"
+paths:
+  /logout:
+    post:
+      description: Удаляет refresh токен пользователя
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_handler.MessageResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Выход из системы
+      tags:
+      - auth
+  /me:
+    get:
+      description: Возвращает GUID аутентифицированного пользователя
+      produces:
+      - application/json
+      responses:
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Получить текущего пользователя
+      tags:
+      - users
+  /tokens:
+    get:
+      consumes:
+      - application/json
+      description: Генерирует access и refresh токены для пользователя
+      parameters:
+      - description: User UUID
+        in: query
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_handler.TokenResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      summary: Получить новую пару токенов
+      tags:
+      - auth
+  /tokens/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Генерирует новую пару токенов по refresh токену
+      parameters:
+      - description: Токены
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/internal_handler.RefreshRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_handler.TokenResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      summary: Обновить пару токенов
+      tags:
+      - auth
+securityDefinitions:
+  BearerAuth:
+    description: Type "Bearer" followed by a space and JWT token
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

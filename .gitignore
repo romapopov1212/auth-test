@@ -1,0 +1,16 @@
+.DS_Store
+.idea
+/bin
+.env
+.vscode
+coverage.out
+requests.http
+.golangci.yml
+gl-code-quality-report.json
+/vendor
+/build
+ca-harbor.crt
+cli-incr.sh
+/.deploy
+assets/*.csv
+.history

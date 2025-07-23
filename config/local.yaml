@@ -1,0 +1,16 @@
+env: "local"
+
+http_server:
+  address: "0.0.0.0:8080"
+
+database:
+  host: "postgres"
+  port: "5432"
+  user: "admin"
+  password: "1234"
+  name: "user_db"
+# example secret key
+secret_key: "0fe1d561e37c1b0e3ebb5f6e065030fb2304b7d9eb6d3c21bfcbf64785797d276d2abef135f6453df0dfbc3ae66e0bd8c7efc3337ae6a6e63efb305ef9bb6628"
+
+webhook:
+  url: "https://example.com"
